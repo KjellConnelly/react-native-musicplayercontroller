@@ -16,7 +16,7 @@ npm install --save react-native-musicplayercontroller
 import presentMethod from 'react-native-musicplayercontroller'
 
 presentMethod() // will add callbacks. But this is just how to open the controller
-``
+```
 
 
 #TODO:
