@@ -1,29 +1,30 @@
 {
-  "name": "React-Native-MusicPlayerController",
-  "version": "0.1",
-  "description": "Modally displays a MPMusicPlayerController (iOS) and its equivalents for Androids and Web.",
-  "main": "RNMusicPlayerController.js",
+  "name": "react-native-musicplayercontroller",
+  "version": "0.0.1",
+  "description": "Modally displays a MPMusicPlayerController (iOS) and its equivalents for Androids and Web",
+  "main": "RNMusicPlayerController",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/KjellConnelly/React-Native-MusicPlayerController.git"
+    "url": "git+https://github.com/KjellConnelly/react-native-musicplayercontroller.git"
   },
   "keywords": [
     "react-native",
-    "custom",
     "component",
+    "react",
+    "web",
+    "react-native-for-web",
+    "mpmusicplayercontroller",
     "music",
     "player",
-    "MPMusicPlayerController",
-    "IOS",
-    "Android"
+    "audio"
   ],
   "author": "Kjell Connelly",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/KjellConnelly/React-Native-MusicPlayerController/issues"
+    "url": "https://github.com/KjellConnelly/react-native-musicplayercontroller/issues"
   },
-  "homepage": "https://github.com/KjellConnelly/React-Native-MusicPlayerController#readme"
+  "homepage": "https://github.com/KjellConnelly/react-native-musicplayercontroller#readme"
 }
