@@ -38,9 +38,9 @@ I'm not sure how to add needed dependencies, but this module currently works wit
 // webpack.config.js
 
 module.exports = {
-// ...
-resolve: {
-extensions: [ '.web.js', '.js' ]
-}
+    // ...
+    resolve: {
+        extensions: [ '.web.js', '.js' ]
+    }
 };
 ```

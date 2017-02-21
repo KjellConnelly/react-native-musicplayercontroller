@@ -1,7 +1,7 @@
 {
   "name": "react-native-musicplayercontroller",
-  "version": "0.0.1",
-  "description": "Modally displays a MPMusicPlayerController (iOS) and its equivalents for Androids and Web",
+  "version": "0.0.3",
+  "description": "Modally displays a MPMusicPlayerController (iOS) and its equivalents for Android and Web",
   "main": "RNMusicPlayerController",
   "scripts": {
     "test": "echo test"
