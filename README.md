@@ -24,63 +24,63 @@ Drag RNMusicPlayerController.m and .h into your Xcode project. (When this repo i
 Sorry - I don't know how to use rnpm link, or react-native link yet. Maybe todo?
 
 ## Usage
-A) Users must pick a song/playlist from their device at least once before they can play back within your app. We'll save the memory of this track for you between app usage. It will be saved to NSUserDefaults (iOS), and thus will be erased when they delete the app. Or it will be overwritten when they choose a new track/playlist. Currently, this code only allows for one song/playlist to be saved between users picking them.
+ A) Users must pick a song/playlist from their device at least once before they can play back within your app. We'll save the memory of this track for you between app usage. It will be saved to NSUserDefaults (iOS), and thus will be erased when they delete the app. Or it will be overwritten when they choose a new track/playlist. Currently, this code only allows for one song/playlist to be saved between users picking them.
 ```javascript
 MusicPlayerController.presentPicker((metadata)=>{
-// Successfully saved MPMediaItemCollection to NSUserDefaults.
-//    Returns an array of metadata for each track (not all MPMediaItem
-//    fields are copied, only the blantantly needed ones)
-alert(metadata[0]["title"])
-}, ()=>{
-// Opened, but user tapped Cancel
-alert("Cancel")
-})
+      // Successfully saved MPMediaItemCollection to NSUserDefaults.
+      //    Returns an array of metadata for each track (not all MPMediaItem
+      //    fields are copied, only the blantantly needed ones)
+        alert(metadata[0]["title"])
+    }, ()=>{
+      // Opened, but user tapped Cancel
+      alert("Cancel")
+    })
 ```
 
 
 B) Once the user has an actual track/playlist chosen, you can access this always, even when the user closes and reopens your app. But you need to preload the music so the player is cached. If you just call the playMusic method, and music hasn't been preloaded, it will fail.
 ```javascript
 MusicPlayerController.preloadMusic((metadata)=>{
-// Successful preload
-}, ()=>{
-// Failed to preload music
-})
+      // Successful preload
+    }, ()=>{
+      // Failed to preload music
+    })
 ```
 
 C) Now you can play music:
 ```javascript
 MusicPlayerController.playMusic(()=>{
-// Successfully playing
-}, ()=>{
-// Failed to play
-})
+        // Successfully playing
+      }, ()=>{
+        // Failed to play
+      })
 ```
 
 D) Or pause music...
 ```javascript
 MusicPlayerController.pauseMusic(()=>{
-// pausing music
-}, ()=> {
-// failed to pause
-})
+      // pausing music
+    }, ()=> {
+      // failed to pause
+    })
 ```
 
 E) Or stop music
 ```javascript
 MusicPlayerController.stopMusic(()=>{
-// music stopped
-}, ()=> {
-// failed to stop music
-})
+      // music stopped
+    }, ()=> {
+      // failed to stop music
+    })
 ```
 
 F) Or check if music is playing 
 ```javascript
 MusicPlayerController.isPlaying(()=>{
-// music is playing
-}, ()=> {
-// music is not playing
-})
+      // music is playing
+    }, ()=> {
+      // music is not playing
+    })
 ```
 
 
@@ -131,12 +131,12 @@ Unfortunately MPMusicPlayerController doesn't work on the iOS Simulator. So you 
 ##### Types of metadata?
 
 I was lazy and didn't include all types of metadata... just the ones I personally want:
-```objc
-@"artist" : item.artist,
-@"title" : item.title,
-@"albumTitle" : item.albumTitle,
-@"playbackDuration" : @(item.playbackDuration)
-```
+ ```objc
+ @"artist" : item.artist,
+ @"title" : item.title,
+ @"albumTitle" : item.albumTitle,
+ @"playbackDuration" : @(item.playbackDuration)
+ ```
 
 ##### I can't do...
 
