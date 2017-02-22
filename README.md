@@ -2,7 +2,6 @@
 
 This module is being created so React-Native (and React-Native for Web) users can easily ask their users to select a song from their Library, and have some playback options, even between sessions. iOS will access their Music Library for songs/playlists that are currently on their device (not in the Cloud) using ```MPMediaPickerController```, and playback will be with ```[MPMusicPlayerController applicationMusicPlayer]``` This is the basis for the other Android and Web versions which I will try to mimic as closely as possible.
 
-I expect you to be able to call the presentViewController method once, then the native code handle the rest until a callback is called to Javascript which will return various metadata, as well as a way to play the music.
 
 ## Current State
 Right now, this works decently for iOS only. Will probably be adding some more functionality as I integrate it with my own projects. Please feel free to request features, as I would like this to work for more than just myself.
@@ -11,7 +10,7 @@ Web version will be next after fully integrating the iOS version with my own cur
 
 Finally, Android will be last, and will probably take a long time since my Android experience is very, very limited. Would love help from others.
 
-## Install
+## Installation
 ```
 npm install --save react-native-musicplayercontroller
 ```
@@ -24,7 +23,11 @@ Drag RNMusicPlayerController.m and .h into your Xcode project. (When this repo i
 Sorry - I don't know how to use rnpm link, or react-native link yet. Maybe todo?
 
 ## Usage
- A) Users must pick a song/playlist from their device at least once before they can play back within your app. We'll save the memory of this track for you between app usage. It will be saved to NSUserDefaults (iOS), and thus will be erased when they delete the app. Or it will be overwritten when they choose a new track/playlist. Currently, this code only allows for one song/playlist to be saved between users picking them.
+ A) Users must pick a song/playlist from their device at least once before they can play audio from within your app. Without user selection, iOS apps have no access to their music library.
+
+We'll save the memory of this track for you between app usage. It will be saved to NSUserDefaults (iOS), and thus will be erased when they delete the app. Or it will be overwritten when they choose a new track/playlist. Currently, this code only allows for one song/playlist to be saved between users picking them.
+
+Here's how to present the Music Picker modally:
 ```javascript
 MusicPlayerController.presentPicker((metadata)=>{
       // Successfully saved MPMediaItemCollection to NSUserDefaults.
@@ -36,14 +39,14 @@ MusicPlayerController.presentPicker((metadata)=>{
       alert("Cancel")
     })
 ```
-
+![alt text](https://github.com/KjellConnelly/react-native-musicplayercontroller/raw/master/src/common/images/example.png "MPMediaPickerController")
 
 B) Once the user has an actual track/playlist chosen, you can access this always, even when the user closes and reopens your app. But you need to preload the music so the player is cached. If you just call the playMusic method, and music hasn't been preloaded, it will fail.
 ```javascript
 MusicPlayerController.preloadMusic("all", (metadata)=>{
       // Successful preload
     }, ()=>{
-      // Failed to preload music
+      // Failed to preload music. Potentially lots of reasons, such as the music file being removed from the device.
     })
 ```
 Note that the first argument is a String. This has to do with the repeatMode. Valid values are:
