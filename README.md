@@ -39,7 +39,7 @@ MusicPlayerController.presentPicker((metadata)=>{
       alert("Cancel")
     })
 ```
-![alt text](https://github.com/KjellConnelly/react-native-musicplayercontroller/raw/master/src/common/images/example.png "MPMediaPickerController")
+![alt text](https://github.com/KjellConnelly/react-native-musicplayercontroller/blob/master/example/example.png "MPMediaPickerController")
 
 B) Once the user has an actual track/playlist chosen, you can access this always, even when the user closes and reopens your app. But you need to preload the music so the player is cached. If you just call the playMusic method, and music hasn't been preloaded, it will fail.
 ```javascript
