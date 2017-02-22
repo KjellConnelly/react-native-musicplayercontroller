@@ -17,9 +17,9 @@ class MusicPlayerController {
         })
     }
     
-    static preloadMusic(successHandler, errorHandler) {
+    static preloadMusic(repeatMode, successHandler, errorHandler) {
         const player = NativeModules.RNMusicPlayerController
-        player.preloadMusic((errorCode, metadata) => {
+        player.preloadMusic(repeatMode, (errorCode, metadata) => {
             if (errorCode == 0) {
                 // Preload successful (application music player)
                 successHandler(metadata)

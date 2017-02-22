@@ -40,11 +40,18 @@ MusicPlayerController.presentPicker((metadata)=>{
 
 B) Once the user has an actual track/playlist chosen, you can access this always, even when the user closes and reopens your app. But you need to preload the music so the player is cached. If you just call the playMusic method, and music hasn't been preloaded, it will fail.
 ```javascript
-MusicPlayerController.preloadMusic((metadata)=>{
+MusicPlayerController.preloadMusic("all", (metadata)=>{
       // Successful preload
     }, ()=>{
       // Failed to preload music
     })
+```
+Note that the first argument is a String. This has to do with the repeatMode. Valid values are:
+```javascript
+"none", // plays the song or playlist once, and doesn't repeat
+"one", // plays the current song on repeat (or if it's a playlist, just the currently selected song)
+"all", // plays all tracks on repeat (for a playlist, or a single track)
+"default" // The user’s preferred repeat mode. Currently, we always use the applicationMusicPlayer, so whatever Apple set as being the default repeat mode, that will happen. I'm not sure which one it uses though, so avoid picking this unless you know for sure what it does.
 ```
 
 C) Now you can play music:

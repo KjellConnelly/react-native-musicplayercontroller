@@ -3,7 +3,7 @@
 //  ReactNativeWeb
 //
 //  Created by Kjell Connelly on 2/20/17.
-//  Copyright © 2017 POP POP LLC. All rights reserved.
+//  Copyright © 2017 Facebook. All rights reserved.
 //
 
 #import "RNMusicPlayerController.h"
@@ -42,7 +42,7 @@ RCT_EXPORT_METHOD(presentPicker: (RCTResponseSenderBlock)callback) {
 //////////////////////////////////////////////////////////////////////
 // MPMusicPlayerController
 
-RCT_EXPORT_METHOD(preloadMusic: (RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(preloadMusic: (NSString *)repeatMode:(RCTResponseSenderBlock)callback) {
     if ([[NSUserDefaults standardUserDefaults] valueForKey:@"mediaItemCollection"] != nil) {
         dispatch_async(dispatch_get_main_queue(), ^{
             NSData *data = [[NSUserDefaults standardUserDefaults] valueForKey:@"mediaItemCollection"];
@@ -52,7 +52,17 @@ RCT_EXPORT_METHOD(preloadMusic: (RCTResponseSenderBlock)callback) {
             if (musicPlayer == nil) {
                 callback(@[[NSNumber numberWithInteger:1], @[]]);
             } else {
-                [musicPlayer setRepeatMode:MPMusicRepeatModeOne];
+                
+                if ([repeatMode isEqualToString:@"none"]) {
+                    [musicPlayer setRepeatMode:MPMusicRepeatModeNone];
+                } else if ([repeatMode isEqualToString:@"one"]) {
+                    [musicPlayer setRepeatMode:MPMusicRepeatModeOne];
+                } else if ([repeatMode isEqualToString:@"all"]) {
+                    [musicPlayer setRepeatMode:MPMusicRepeatModeAll];
+                } else {
+                    [musicPlayer setRepeatMode:MPMusicRepeatModeDefault];
+                }
+                
                 [musicPlayer setQueueWithItemCollection:mediaItemCollection];
                 [musicPlayer prepareToPlayWithCompletionHandler:^(NSError * _Nullable error) {
                     if (error) {
