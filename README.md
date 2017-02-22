@@ -1,11 +1,15 @@
-## react-native-musicplayercontroller
+# react-native-musicplayercontroller
 
-This is my first public repo, and I'm still in the process of setting this repo up to work with the current project I'm working on, and for others. So bare with me. Oh, and don't bother installing yet. It's not ready for anything yet.
-
-### (*When Done*) Description
-This module is being created so React-Native (and React-Native for Web) users can easily ask their users to select a song from their Library. iOS will access their Music Library for songs/playlists that are currently on their device (not in the Cloud) using MPMusicPlayerController. This is the basis for the other Android and Web versions which I will try to mimic as closely as possible.
+This module is being created so React-Native (and React-Native for Web) users can easily ask their users to select a song from their Library, and have some playback options, even between sessions. iOS will access their Music Library for songs/playlists that are currently on their device (not in the Cloud) using ```MPMediaPickerController```, and playback will be with ```[MPMusicPlayerController applicationMusicPlayer]``` This is the basis for the other Android and Web versions which I will try to mimic as closely as possible.
 
 I expect you to be able to call the presentViewController method once, then the native code handle the rest until a callback is called to Javascript which will return various metadata, as well as a way to play the music.
+
+## Current State
+Right now, this works decently for iOS only. Will probably be adding some more functionality as I integrate it with my own projects. Please feel free to request features, as I would like this to work for more than just myself.
+
+Web version will be next after fully integrating the iOS version with my own current project. Web because I am so-so in web technologies.
+
+Finally, Android will be last, and will probably take a long time since my Android experience is very, very limited. Would love help from others.
 
 ## Install
 ```
@@ -13,20 +17,80 @@ npm install --save react-native-musicplayercontroller
 ```
 
 ```javascript
-import presentViewController from 'react-native-musicplayercontroller'
+import MusicPlayerController from 'react-native-musicplayercontroller'
+```
+Drag RNMusicPlayerController.m and .h into your Xcode project. (When this repo is updated, make sure these two files are either linked to the current ones, or you drag in copies of the new versions)
 
-presentViewController() // will add callbacks. But this is just how to open the controller
+Sorry - I don't know how to use rnpm link, or react-native link yet. Maybe todo?
+
+## Usage
+A) Users must pick a song/playlist from their device at least once before they can play back within your app. We'll save the memory of this track for you between app usage. It will be saved to NSUserDefaults (iOS), and thus will be erased when they delete the app. Or it will be overwritten when they choose a new track/playlist. Currently, this code only allows for one song/playlist to be saved between users picking them.
+```javascript
+MusicPlayerController.presentPicker((metadata)=>{
+// Successfully saved MPMediaItemCollection to NSUserDefaults.
+//    Returns an array of metadata for each track (not all MPMediaItem
+//    fields are copied, only the blantantly needed ones)
+alert(metadata[0]["title"])
+}, ()=>{
+// Opened, but user tapped Cancel
+alert("Cancel")
+})
+```
+
+
+B) Once the user has an actual track/playlist chosen, you can access this always, even when the user closes and reopens your app. But you need to preload the music so the player is cached. If you just call the playMusic method, and music hasn't been preloaded, it will fail.
+```javascript
+MusicPlayerController.preloadMusic((metadata)=>{
+// Successful preload
+}, ()=>{
+// Failed to preload music
+})
+```
+
+C) Now you can play music:
+```javascript
+MusicPlayerController.playMusic(()=>{
+// Successfully playing
+}, ()=>{
+// Failed to play
+})
+```
+
+D) Or pause music...
+```javascript
+MusicPlayerController.pauseMusic(()=>{
+// pausing music
+}, ()=> {
+// failed to pause
+})
+```
+
+E) Or stop music
+```javascript
+MusicPlayerController.stopMusic(()=>{
+// music stopped
+}, ()=> {
+// failed to stop music
+})
+```
+
+F) Or check if music is playing 
+```javascript
+MusicPlayerController.isPlaying(()=>{
+// music is playing
+}, ()=> {
+// music is not playing
+})
 ```
 
 
 ## TODO:
 1. ~~Setup Test Repo and integrate with current project~~
-2. Write iOS Version
+2. ~~Write iOS Version~~ Initial Complete
 3. Write Web Version
 4. Hope someone writes the Android version
 5. Possibly write the Android version
 
-I have experience with MPMusicPlayerController using iOS Objective-C and Swift, so step 1-3 will be done for sure. 5 is unknown since I haven't written Java since my intro to programming class over 10 years ago.'
 
 ## License
 *MIT*
@@ -45,6 +109,9 @@ module.exports = {
 };
 ```
 
+#### iOS
+Should work for iOS 3.0+ (devices from 2009)
+
 ## Common Debugging Issues
 
 ##### If you just downloaded the new version of this package...
@@ -60,3 +127,17 @@ Otherwise your module will be old
 ##### If you're testing on simulator
 
 Unfortunately MPMusicPlayerController doesn't work on the iOS Simulator. So you just get an alert.
+
+##### Types of metadata?
+
+I was lazy and didn't include all types of metadata... just the ones I personally want:
+```objc
+@"artist" : item.artist,
+@"title" : item.title,
+@"albumTitle" : item.albumTitle,
+@"playbackDuration" : @(item.playbackDuration)
+```
+
+##### I can't do...
+
+I know, I know. There's a lot that may be difficult to do with this module as of now. But it allows for the situation where you want a user to be able to select some music from their own library, and play is back within your own app. And that's my focus for now. Please ask any questions or ask for a feature and I'll see what I can do.
