@@ -11,16 +11,18 @@ Web version will be next after fully integrating the iOS version with my own cur
 Finally, Android will be last, and will probably take a long time since my Android experience is very, very limited. Would love help from others.
 
 ## Installation
+
 ```
 npm install --save react-native-musicplayercontroller
+react-native link
 ```
+
+If your Xcode project has more than one Target, you will need to navigate to ```Libraries > RNReactNativeMusicplayercontroller.xcodeproj > Products > libRNReactNativeMusicplayercontroller.a``` and drag this into each ```Target's Build Phases > Link Binary with Libraries```. There should already be a few .a files in there, so it's pretty obvious. react-native link only links to the first Target.
 
 ```javascript
 import MusicPlayerController from 'react-native-musicplayercontroller'
 ```
-Drag RNMusicPlayerController.m and .h into your Xcode project. (When this repo is updated, make sure these two files are either linked to the current ones, or you drag in copies of the new versions)
 
-Sorry - I don't know how to use rnpm link, or react-native link yet. Maybe todo?
 
 ## Usage
  A) Users must pick a song/playlist from their device at least once before they can play audio from within your app. Without user selection, iOS apps have no access to their music library.

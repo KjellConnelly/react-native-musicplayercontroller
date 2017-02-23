@@ -2,7 +2,7 @@ import {NativeModules} from 'react-native'
 
 class MusicPlayerController {
     static presentPicker(successHandler, cancelHandler, errorOpeningHandler, errorPickingHandler) {
-        const player = NativeModules.RNMusicPlayerController
+        const player = NativeModules.RNReactNativeMusicplayercontroller
         player.presentPicker((errorCode, metadata) => {
             if (errorCode == 0) {
                 // No Error. User picked
@@ -18,7 +18,7 @@ class MusicPlayerController {
     }
     
     static preloadMusic(repeatMode, successHandler, errorHandler) {
-        const player = NativeModules.RNMusicPlayerController
+        const player = NativeModules.RNReactNativeMusicplayercontroller
         player.preloadMusic(repeatMode, (errorCode, metadata) => {
             if (errorCode == 0) {
                 // Preload successful (application music player)
@@ -31,7 +31,7 @@ class MusicPlayerController {
     }
     
     static playMusic(successHandler, errorHandler) {
-        const player = NativeModules.RNMusicPlayerController
+        const player = NativeModules.RNReactNativeMusicplayercontroller
         player.playMusic((errorCode, metadata) => {
             if (errorCode == 0) {
                 // Successfully played music (even if already playing)
@@ -44,7 +44,7 @@ class MusicPlayerController {
     }
     
     static stopMusic(successHandler, errorHandler) {
-        const player = NativeModules.RNMusicPlayerController
+        const player = NativeModules.RNReactNativeMusicplayercontroller
         player.stopMusic((errorCode, metadata) => {
             if (errorCode == 0) {
                 // Successfully stopped music (even if it was already stopped)
@@ -57,7 +57,7 @@ class MusicPlayerController {
     }
     
     static pauseMusic(successHandler, errorHandler) {
-        const player = NativeModules.RNMusicPlayerController
+        const player = NativeModules.RNReactNativeMusicplayercontroller
         player.pauseMusic((errorCode, metadata) => {
             if (errorCode == 0) {
                 // Successfully stopped music (even if it was already stopped)
@@ -70,7 +70,7 @@ class MusicPlayerController {
     }
     
     static isPlaying(isPlayingHandler, notPlayingHandler) {
-        const player = NativeModules.RNMusicPlayerController
+        const player = NativeModules.RNReactNativeMusicplayercontroller
         player.isPlaying((errorCode, result) => {
             if (errorCode == 0) {
                 // Music Player is playing
