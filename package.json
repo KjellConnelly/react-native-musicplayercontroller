@@ -1,6 +1,6 @@
 {
   "name": "react-native-musicplayercontroller",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Class to modally display MPMediaPickerViewController and play music from a user's device using MPMusicPlayerController (iOS), and its Android/Web equivilents",
   "main": "RNMusicPlayerController",
   "scripts": {

@@ -120,23 +120,24 @@ module.exports = {
 ```
 
 #### iOS
-Should work for iOS 3.0+ (devices from 2009)
+Should work for iOS 3.0+ (devices from 2009 or later). Of course React Native is requires a newer version, which may change as time goes on. But lets just say this module works for all iOS devices because it probably will.
 
 ## Common Debugging Issues
 
 ##### If you just downloaded the new version of this package...
+Open your app's package.json file and make sure under dependencies, react-native-musicplayercontroller has a version number you're okay with. I like to do: ```"react-native-musicplayercontroller": "*"``` because it always prioritizes the latest version. Then:
 ```
 npm update react-native-musicplayercontroller
 ```
 ... then you will want to restart the React-Native server. So kill that process in your terminal and restart it:
 ```
-react-native run-ios
+react-native start
 ```
-Otherwise your module will be old
+And of course, rebuild the actual app (Xcode > Build & Run, or ```react-native run-ios```)
 
 ##### If you're testing on simulator
 
-Unfortunately MPMusicPlayerController doesn't work on the iOS Simulator. So you just get an alert.
+Unfortunately MPMediaPickerController doesn't work on the iOS Simulator. So you just get an alert if you try to open the Picker. And since you can't pick an item, playing them won't work either because you won't have anything selected.
 
 ##### Types of metadata?
 
