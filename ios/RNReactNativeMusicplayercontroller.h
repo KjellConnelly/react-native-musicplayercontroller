@@ -1,6 +1,5 @@
 //
-//  RCTMusicPlayer.h
-//  ReactNativeWeb
+//  RNReactNativeMusicplayercontroller.h
 //
 //  Created by Kjell Connelly on 2/20/17.
 //  Copyright © 2017 POP POP LLC. All rights reserved.

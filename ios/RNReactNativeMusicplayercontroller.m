@@ -1,14 +1,13 @@
 //
-//  RCTMusicPlayer.m
-//  ReactNativeWeb
+//  RNReactNativeMusicplayercontroller.m
 //
 //  Created by Kjell Connelly on 2/20/17.
 //  Copyright © 2017 Facebook. All rights reserved.
 //
 
-#import "RNMusicPlayerController.h"
+#import "RNReactNativeMusicplayercontroller.h"
 
-@implementation RNMusicPlayerController
+@implementation RNReactNativeMusicplayercontroller
 RCTResponseSenderBlock savedCallback;
 MPMusicPlayerController *musicPlayer;
 
