@@ -25,8 +25,21 @@ RCT_EXPORT_METHOD(presentPicker: (RCTResponseSenderBlock)callback) {
     savedCallback(@[[NSNumber numberWithInt:2], @[]]);
 #else
     dispatch_async(dispatch_get_main_queue(), ^{
-        UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
-        UIViewController *rootViewController = keyWindow.rootViewController;
+        UIViewController *topViewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+        while (true) {
+            if (topViewController.presentedViewController) {
+                topViewController = topViewController.presentedViewController;
+            } else if ([topViewController isKindOfClass:[UINavigationController class]]) {
+                UINavigationController *nav = (UINavigationController *)topViewController;
+                topViewController = nav.topViewController;
+            } else if ([topViewController isKindOfClass:[UITabBarController class]]) {
+                UITabBarController *tab = (UITabBarController *)topViewController;
+                topViewController = tab.selectedViewController;
+            } else {
+                break;
+            }
+        }
+        
         MPMediaPickerController *picker = [[MPMediaPickerController alloc] initWithMediaTypes:MPMediaTypeMusic];
         [picker setShowsCloudItems:false];
         [picker setAllowsPickingMultipleItems:false];
@@ -34,7 +47,7 @@ RCT_EXPORT_METHOD(presentPicker: (RCTResponseSenderBlock)callback) {
             [picker setShowsItemsWithProtectedAssets:false];
         }
         [picker setDelegate:self];
-        [rootViewController presentViewController:picker animated:true completion:^{}];
+        [topViewController presentViewController:picker animated:true completion:^{}];
     });
 #endif
 }
