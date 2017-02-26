@@ -30,32 +30,31 @@ We'll save the memory of this track for you between app usage. It will be saved 
 Here's how to present the Music Picker modally:
 ```javascript
 MusicPlayerController.presentPicker(false, (metadata)=>{
-      // Successfully saved MPMediaItemCollection to NSUserDefaults.
-      //    Returns an array of metadata for each track (not all MPMediaItem
-      //    fields are copied, only the blantantly needed ones)
-        alert(metadata[0]["title"])
-    }, ()=>{
-      // Opened, but user tapped Cancel
-      alert("Cancel")
-    })
+  // Successfully saved MPMediaItemCollection to NSUserDefaults.
+  //    Returns an array of metadata for each track (not all MPMediaItem
+  //    fields are copied, only the blantantly needed ones)
+    alert(metadata[0]["title"])
+}, ()=>{
+  // Opened, but user tapped Cancel
+  alert("Cancel")
+})
 ```
 
-
-![alt text](https://raw.githubusercontent.com/kjellconnelly/react-native-musicplayercontroller/master/example/picker_ios.gif "MPMediaPickerController - iOS")
 ###### MPMediaPickerController - iOS
+![alt text](https://raw.githubusercontent.com/kjellconnelly/react-native-musicplayercontroller/master/example/picker_ios.gif "MPMediaPickerController - iOS")
 
+###### input type='file' - web
 ![alt text](https://raw.githubusercontent.com/kjellconnelly/react-native-musicplayercontroller/master/example/picker_web.gif "<input type='file' /> - web")
-###### <input type='file' /> - web
 
-*note that the first argument is false. This has to do with the web version only (unused variable on iOS and Android, but we still put it there so we don't have different code calls). It has to do with whether you want to save the sound file locally. Due to web restrictions, we can't save a link to the file the user selected between page refreshes. So we need to make a local copy of the music file and save it to local storage. Since local storage is fairly small on most browsers (usually 5MB), we wouldn't want to save it if we plan to use local storage for anything else, or have users pick files that are larger than 5MB. So this is optional. On iOS and Android, we actually can save a link. So the memory usage is pretty much no existant. 
+*note* that the first argument is false. This has to do with the web version only (unused variable on iOS and Android, but we still put it there so we don't have different code calls). It has to do with whether you want to save the sound file locally. Due to web restrictions, we can't save a link to the file the user selected between page refreshes. So we need to make a local copy of the music file and save it to local storage. Since local storage is fairly small on most browsers (usually 5MB), we wouldn't want to save it if we plan to use local storage for anything else, or have users pick files that are larger than 5MB. So this is optional. On iOS and Android, we actually can save a link. So the memory usage is pretty much no existant. 
 
 B) Once the user has an actual track/playlist chosen, you can access this always, even when the user closes and reopens your app. But you need to preload the music so the player is cached. If you just call the playMusic method, and music hasn't been preloaded, it will fail.
 ```javascript
 MusicPlayerController.preloadMusic("all", (metadata)=>{
-      // Successful preload
-    }, ()=>{
-      // Failed to preload music. Potentially lots of reasons, such as the music file being removed from the device.
-    })
+  // Successful preload
+}, ()=>{
+  // Failed to preload music. Potentially lots of reasons, such as the music file being removed from the device.
+})
 ```
 Note that the first argument is a String. This has to do with the repeatMode. Valid values are:
 ```javascript
@@ -148,7 +147,7 @@ The web version has a few issues:
 1. Due to web restrictions, we can't save a link to the audio file selected beyond browser refreshes. So in order to compensate, you can choose to either save the entire audio file to local storage (which has a 5-10 mb maximum), or not save it. Saving on other platforms just saves the link.
 **Note that as of the current version, this bool is irrelevent, as both ```true``` and ```false``` will not save to Local Storage (this is because my project doesn't need it, but I might add this functionality some day if someone needs it, or I do.). Nevertheless, you still need to include it.**
 2. If opens the Picker dialog, and clicks cancel without selecting an audio file, your cancelHandler won't be called. But if they select a file, and the successHandler is called, then open the Picker dialog again, and click cancel, the cancelHandler will be called. Weird web issues...
-3. Audio is played using the ```<audio />''' tag. This means that users can only use mp3, wav, and ogg files. We recommend mp3 since they work on all browsers, while the others vary.
+3. Audio is played using the ```<audio />``` tag. This means that users can only use mp3, wav, and ogg files. We recommend mp3 since they work on all browsers, while the others vary.
 4. ```repeatMode``` was originally created for iOS. We're setting ```'none'``` has non repeating (plays once), and all other values as repeating forever. This is because you cannot select a playlist, but only an audio file.
 5. I'm not sure how to get actual metadata from a mp3 or wav, so for ```metadata```, it will only hold one key: ```title```, which is the audio file name.
 
@@ -178,6 +177,7 @@ I was lazy and didn't include all types of metadata... just the ones I personall
  @"albumTitle" : item.albumTitle,
  @"playbackDuration" : @(item.playbackDuration)
  ```
+Oh, and web only has ```title```, which actually shows the filename.
 
 ##### I can't do...
 
