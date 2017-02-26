@@ -1,7 +1,7 @@
 import {NativeModules} from 'react-native'
 
 class MusicPlayerController {
-    static presentPicker(successHandler, cancelHandler, errorOpeningHandler, errorPickingHandler) {
+    static presentPicker(webSaveToLocalStorage, successHandler, cancelHandler) {
         const player = NativeModules.RNReactNativeMusicplayercontroller
         player.presentPicker((errorCode, metadata) => {
             if (errorCode == 0) {
@@ -12,7 +12,7 @@ class MusicPlayerController {
                 cancelHandler()
             } else if (errorCode == 2) {
                 // Cannot open picker - Using Simulator 
-                alert("Sorry - iOS doesn't allow MPMusicPlayerController to be opened on the simulator. Please try on an actual device with at least one song in the library")
+                alert("Sorry - iOS doesn't allow MPMusicPlayerController to be opened on the simulator. Please try on an actual device with at least one song in the library (song download from iTunes and in your Music App)")
             }
         })
     }

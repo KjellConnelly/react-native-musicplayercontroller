@@ -4,11 +4,11 @@ This module is being created so React-Native (and React-Native for Web) users ca
 
 
 ## Current State
-Right now, this works decently for iOS only. Will probably be adding some more functionality as I integrate it with my own projects. Please feel free to request features, as I would like this to work for more than just myself.
+I got an initial iOS and Web version working. So far it works with my project, and the functions you call should be exactly the same on both platforms. There are certain things that are not 100% the same in the execution though, so check out the Known Issues section near the bottom of this page for more details.
 
-Web version will be next after fully integrating the iOS version with my own current project. Web because I am so-so in web technologies.
+I updated one function to have an extra argument: ```presentPicker(webSaveToLocalStorage, successHandler, cancelHandler)```
 
-Finally, Android will be last, and will probably take a long time since my Android experience is very, very limited. Would love help from others.
+I haven't started working on the Android version yet, but soon. I know there is a folder for the Windows version, but the only Windows OS I have is Windows8, and it's on a $300 laptop from 2014. So it's not the platform I want to develop on. Maybe someday I'll add functionality for this, but don't hold your breath. Until then, you can still run your app on windows with a WebView (think cordova), and use the web version of this module. The reason the folder is there in the first place is because I used a starter library.
 
 ## Installation
 
@@ -17,21 +17,19 @@ npm install --save react-native-musicplayercontroller
 react-native link
 ```
 
-If your Xcode project has more than one Target, you will need to navigate to ```Libraries > RNReactNativeMusicplayercontroller.xcodeproj > Products > libRNReactNativeMusicplayercontroller.a``` and drag this into each ```Target's Build Phases > Link Binary with Libraries```. There should already be a few .a files in there, so it's pretty obvious. react-native link only links to the first Target.
+If your Xcode project has more than one Target, you will need to navigate to ```Libraries > RNReactNativeMusicplayercontroller.xcodeproj > Products > libRNReactNativeMusicplayercontroller.a``` and drag this into each Target's ```Build Phases > Link Binary with Libraries```. There should already be a few .a files in there, so it's pretty obvious. react-native link only links to the first Target.
 
+## Usage
 ```javascript
 import MusicPlayerController from 'react-native-musicplayercontroller'
 ```
-
-
-## Usage
  A) Users must pick a song/playlist from their device at least once before they can play audio from within your app. Without user selection, iOS apps have no access to their music library.
 
 We'll save the memory of this track for you between app usage. It will be saved to NSUserDefaults (iOS), and thus will be erased when they delete the app. Or it will be overwritten when they choose a new track/playlist. Currently, this code only allows for one song/playlist to be saved between users picking them.
 
 Here's how to present the Music Picker modally:
 ```javascript
-MusicPlayerController.presentPicker((metadata)=>{
+MusicPlayerController.presentPicker(false, (metadata)=>{
       // Successfully saved MPMediaItemCollection to NSUserDefaults.
       //    Returns an array of metadata for each track (not all MPMediaItem
       //    fields are copied, only the blantantly needed ones)
@@ -41,7 +39,15 @@ MusicPlayerController.presentPicker((metadata)=>{
       alert("Cancel")
     })
 ```
-![alt text](https://github.com/KjellConnelly/react-native-musicplayercontroller/blob/master/example/example.png "MPMediaPickerController")
+
+
+![alt text](https://raw.githubusercontent.com/kjellconnelly/react-native-musicplayercontroller/master/example/picker_ios.gif "MPMediaPickerController - iOS")
+###### MPMediaPickerController - iOS
+
+![alt text](https://raw.githubusercontent.com/kjellconnelly/react-native-musicplayercontroller/master/example/picker_web.gif "<input type='file' /> - web")
+###### <input type='file' /> - web
+
+*note that the first argument is false. This has to do with the web version only (unused variable on iOS and Android, but we still put it there so we don't have different code calls). It has to do with whether you want to save the sound file locally. Due to web restrictions, we can't save a link to the file the user selected between page refreshes. So we need to make a local copy of the music file and save it to local storage. Since local storage is fairly small on most browsers (usually 5MB), we wouldn't want to save it if we plan to use local storage for anything else, or have users pick files that are larger than 5MB. So this is optional. On iOS and Android, we actually can save a link. So the memory usage is pretty much no existant. 
 
 B) Once the user has an actual track/playlist chosen, you can access this always, even when the user closes and reopens your app. But you need to preload the music so the player is cached. If you just call the playMusic method, and music hasn't been preloaded, it will fail.
 ```javascript
@@ -62,44 +68,44 @@ Note that the first argument is a String. This has to do with the repeatMode. Va
 C) Now you can play music:
 ```javascript
 MusicPlayerController.playMusic(()=>{
-        // Successfully playing
-      }, ()=>{
-        // Failed to play
-      })
+    // Successfully playing
+}, ()=>{
+    // Failed to play
+})
 ```
 
 D) Or pause music...
 ```javascript
 MusicPlayerController.pauseMusic(()=>{
-      // pausing music
-    }, ()=> {
-      // failed to pause
-    })
+  // pausing music
+}, ()=> {
+  // failed to pause
+})
 ```
 
 E) Or stop music
 ```javascript
 MusicPlayerController.stopMusic(()=>{
-      // music stopped
-    }, ()=> {
-      // failed to stop music
-    })
+  // music stopped
+}, ()=> {
+  // failed to stop music
+})
 ```
 
 F) Or check if music is playing 
 ```javascript
 MusicPlayerController.isPlaying(()=>{
-      // music is playing
-    }, ()=> {
-      // music is not playing
-    })
+  // music is playing
+}, ()=> {
+  // music is not playing
+})
 ```
 
 
 ## TODO:
 1. ~~Setup Test Repo and integrate with current project~~
 2. ~~Write iOS Version~~ Initial Complete
-3. Write Web Version
+3. ~~Write Web Version~~ Initial Complete
 4. Hope someone writes the Android version
 5. Possibly write the Android version
 
@@ -122,7 +128,29 @@ module.exports = {
 ```
 
 #### iOS
-Should work for iOS 3.0+ (devices from 2009 or later). Of course React Native is requires a newer version, which may change as time goes on. But lets just say this module works for all iOS devices because it probably will.
+Should work for iOS 8.0+ (devices from late 2014 or later). Only physically tested on iOS 10.2
+
+#### Web
+Should work for all modern browsers, though users can only select mp3, ogg, and wav files. Who uses ogg and wav anyways? 
+1. Chrome 4.0 (2010) 
+2. IE 9.0 (2011, mp3 only)
+3. Firefox (2009)
+4. Safari (2009, mp3 and wav only)
+5. Opera (2007)
+6. Edge (2016)
+Also works on Mobile Browsers
+1. iOS Safari & Chrome (2016)
+2. Android Browser (2013)
+3. Android Chrome (2017)
+
+## Known Issues
+The web version has a few issues:
+1. Due to web restrictions, we can't save a link to the audio file selected beyond browser refreshes. So in order to compensate, you can choose to either save the entire audio file to local storage (which has a 5-10 mb maximum), or not save it. Saving on other platforms just saves the link.
+**Note that as of the current version, this bool is irrelevent, as both ```true``` and ```false``` will not save to Local Storage (this is because my project doesn't need it, but I might add this functionality some day if someone needs it, or I do.). Nevertheless, you still need to include it.**
+2. If opens the Picker dialog, and clicks cancel without selecting an audio file, your cancelHandler won't be called. But if they select a file, and the successHandler is called, then open the Picker dialog again, and click cancel, the cancelHandler will be called. Weird web issues...
+3. Audio is played using the ```<audio />''' tag. This means that users can only use mp3, wav, and ogg files. We recommend mp3 since they work on all browsers, while the others vary.
+4. ```repeatMode``` was originally created for iOS. We're setting ```'none'``` has non repeating (plays once), and all other values as repeating forever. This is because you cannot select a playlist, but only an audio file.
+5. I'm not sure how to get actual metadata from a mp3 or wav, so for ```metadata```, it will only hold one key: ```title```, which is the audio file name.
 
 ## Common Debugging Issues
 
