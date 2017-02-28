@@ -153,33 +153,34 @@ Should work for iOS 8.0+ (devices from late 2014 or later). Only physically test
 Works for all React-Native Projects (Marshmallow and above).
 
 #### Web
-Should work for all modern browsers, though users can only select mp3, ogg, and wav files. Who uses ogg and wav anyways? 
-1. Chrome 4.0 (2010)  
-2. IE 9.0 (2011, mp3 only)  
-3. Firefox (2009)  
-4. Safari (2009, mp3 and wav only)  
-5. Opera (2007)  
-6. Edge (2016)  
+Should work for all modern browsers, though users can only select mp3, ogg, and wav files. Who uses ogg and wav anyways?  
+..1. Chrome 4.0 (2010)  
+..2. IE 9.0 (2011, mp3 only)  
+..3. Firefox (2009)  
+..4. Safari (2009, mp3 and wav only)  
+..5. Opera (2007)  
+..6. Edge (2016)  
+  
 Also works on Mobile Browsers  
-1. iOS Safari & Chrome (2016)  
-2. Android Browser (2013)  
-3. Android Chrome (2017)  
+..1. iOS Safari & Chrome (2016)  
+..2. Android Browser (2013)  
+..3. Android Chrome (2017)  
   
 ## Known Issues
-*Web Issues*
-1. Due to web restrictions, we can't save a link to the audio file selected beyond browser refreshes. So in order to compensate, you can choose to either save the entire audio file to local storage (which has a 5-10 mb maximum), or not save it. Saving on other platforms just saves the link.  
+*Web Issues*  
+..1. Due to web restrictions, we can't save a link to the audio file selected beyond browser refreshes. So in order to compensate, you can choose to either save the entire audio file to local storage (which has a 5-10 mb maximum), or not save it. Saving on other platforms just saves the link.  
 
 **Note that as of the current version, this bool is irrelevent, as both ```true``` and ```false``` will not save to Local Storage (this is because my project doesn't need it, but I might add this functionality some day if someone needs it, or I do). Nevertheless, you still need to include it.**  
-2. If opens the Picker dialog, and clicks cancel without selecting an audio file, your cancelHandler won't be called. But if they select a file, and the successHandler is called, then open the Picker dialog again, and click cancel, the cancelHandler will be called. Weird web issues...  
-3. Audio is played using the ```<audio />``` tag. This means that users can only use mp3, wav, and ogg files. We recommend mp3 since they work on all browsers, while the others vary.  
-4. ```repeatMode``` was originally created for iOS. We're setting ```'none'``` has non repeating (plays once), and all other values as repeating forever. This is because you cannot select a playlist, but only an audio file.  
-5. I'm not sure how to get actual metadata from a mp3 or wav, so for ```metadata```, it will only hold one key: ```title```, which is the audio file name.  
+..2. If opens the Picker dialog, and clicks cancel without selecting an audio file, your cancelHandler won't be called. But if they select a file, and the successHandler is called, then open the Picker dialog again, and click cancel, the cancelHandler will be called. Weird web issues...  
+..3. Audio is played using the ```<audio />``` tag. This means that users can only use mp3, wav, and ogg files. We recommend mp3 since they work on all browsers, while the others vary.  
+..4. ```repeatMode``` was originally created for iOS. We're setting ```'none'``` has non repeating (plays once), and all other values as repeating forever. This is because you cannot select a playlist, but only an audio file.  
+..5. I'm not sure how to get actual metadata from a mp3 or wav, so for ```metadata```, it will only hold one key: ```title```, which is the audio file name.  
 
-*Android Issues*
-1. Unlike iOS and Web, you need to user permission to access files (even the ones they pick). Similar to how on iOS, you need permission to access the Microphone. Though the API is the same for iOS, Android, and Web, there is one method that really only needs to be called if you are using Android: requestPermission. If you call this on other platforms, it just runs the 'permission already accepted' handler.  
-2. I'm not exactly sure why the picker slides the current Activity away first as in the example gif. But that's only if you have a new Activity (ViewController basically) ontop of your main one.  
-3. Technically speaking, when you call the stopMusic function, music is actually paused, and after a slight delay, moves to time 0. This is a 100ms delay. I added this here because using the Java API, pausing and seeking to time 0 would seek before fully pausing. And the stop method made me need to prepare the MediaPlayer again. So it will be in the paused state if you go into the Java side of things.  
-4. Since Android lets you pick files you may have randomly put on your device, you may end up with audio files that do not have very good metadata. In this case, if there is no title attributed to the metadata, we will return the filename instead (similar to the web version).  
+*Android Issues*  
+..1. Unlike iOS and Web, you need to user permission to access files (even the ones they pick). Similar to how on iOS, you need permission to access the Microphone. Though the API is the same for iOS, Android, and Web, there is one method that really only needs to be called if you are using Android: requestPermission. If you call this on other platforms, it just runs the 'permission already accepted' handler.  
+..2. I'm not exactly sure why the picker slides the current Activity away first as in the example gif. But that's only if you have a new Activity (ViewController basically) ontop of your main one.  
+..3. Technically speaking, when you call the stopMusic function, music is actually paused, and after a slight delay, moves to time 0. This is a 100ms delay. I added this here because using the Java API, pausing and seeking to time 0 would seek before fully pausing. And the stop method made me need to prepare the MediaPlayer again. So it will be in the paused state if you go into the Java side of things.  
+..4. Since Android lets you pick files you may have randomly put on your device, you may end up with audio files that do not have very good metadata. In this case, if there is no title attributed to the metadata, we will return the filename instead (similar to the web version).  
 
 ## Common Debugging Issues
 
