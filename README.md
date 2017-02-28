@@ -114,7 +114,7 @@ MusicPlayerController.requestPermission("Permission Required",
 
 
 **WE RECOMMEND FOR CROSS PLATFORM APPS**
-Always do part H if your app uses Android. You can have all the same logic for iOS and Web since we'll simply always call the 'User has already accepted' callback. If you need to handle UI or have some other logic for Android Permissions, check out React Native's APIs: Permissions Android. The specific permission we use here is: ```READ_EXTERNAL_STORAGE``` (java), which is aka ```PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE``` (for React-Native)
+Always do part G if your app uses Android. You can have all the same logic for iOS and Web since we'll simply always call the 'User has already accepted' callback. If you need to handle UI or have some other logic for Android Permissions, check out React Native's APIs: Permissions Android. The specific permission we use here is: ```READ_EXTERNAL_STORAGE``` (java), which is aka ```PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE``` (for React-Native)
 
 If your app doesn't use Android, you won't need this.
 
