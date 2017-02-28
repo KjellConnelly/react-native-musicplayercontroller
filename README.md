@@ -1,14 +1,10 @@
 # react-native-musicplayercontroller
 
-This module is being created so React-Native (and React-Native for Web) users can easily ask their users to select a song from their Library, and have some playback options, even between sessions. iOS will access their Music Library for songs/playlists that are currently on their device (not in the Cloud) using ```MPMediaPickerController```, and playback will be with ```[MPMusicPlayerController applicationMusicPlayer]``` This is the basis for the other Android and Web versions which I will try to mimic as closely as possible.
+This module is being created so React-Native (and React-Native for Web) users can easily ask their users to select a song from their Library, and have some playback options, even between sessions. iOS will access their Music Library for songs/playlists that are currently on their device (not in the Cloud) using ```MPMediaPickerController```, and playback will be with ```[MPMusicPlayerController applicationMusicPlayer]``` This is the basis for the other Android and Web versions which I tried to mimic as closely as possible.
 
 
 ## Current State
-I got an initial iOS and Web version working. So far it works with my project, and the functions you call should be exactly the same on both platforms. There are certain things that are not 100% the same in the execution though, so check out the Known Issues section near the bottom of this page for more details.
-
-I updated one function to have an extra argument: ```presentPicker(webSaveToLocalStorage, successHandler, cancelHandler)```
-
-I haven't started working on the Android version yet, but soon. I know there is a folder for the Windows version, but the only Windows OS I have is Windows8, and it's on a $300 laptop from 2014. So it's not the platform I want to develop on. Maybe someday I'll add functionality for this, but don't hold your breath. Until then, you can still run your app on windows with a WebView (think cordova), and use the web version of this module. The reason the folder is there in the first place is because I used a starter library.
+Initial versions for iOS, Android, and Web have been completed. After a few days of fully integrating and testing on my own current app, I'll bump this to version 1.0.0. Note that the API for all is the same, though the functionality may differ slightly. Check out more of this readme for more details on differences. 
 
 ## Installation
 
@@ -23,11 +19,11 @@ If your Xcode project has more than one Target, you will need to navigate to ```
 ```javascript
 import MusicPlayerController from 'react-native-musicplayercontroller'
 ```
- A) Users must pick a song/playlist from their device at least once before they can play audio from within your app. Without user selection, iOS apps have no access to their music library.
+ A) Users must pick a song/playlist from their device at least once before they can play audio from within your app. Without user selection, we have no access to their music library.
 
-We'll save the memory of this track for you between app usage. It will be saved to NSUserDefaults (iOS), and thus will be erased when they delete the app. Or it will be overwritten when they choose a new track/playlist. Currently, this code only allows for one song/playlist to be saved between users picking them.
+We'll save the memory of this track for you between app usage. It will be saved to ```NSUserDefaults``` (iOS), ```SharedPreferences``` (android), and possibly ```Local Storage``` (web), and thus will be erased when they delete the app. Or it will be overwritten when they choose a new track/playlist. Currently, this code only allows for one song/playlist to be saved between users picking them.
 
-Here's how to present the Music Picker modally:
+Here's how to present the Music Picker modally (android users, please use requestPermission method first):
 ```javascript
 MusicPlayerController.presentPicker(false, (metadata)=>{
   // Successfully saved MPMediaItemCollection to NSUserDefaults.
@@ -42,6 +38,9 @@ MusicPlayerController.presentPicker(false, (metadata)=>{
 
 ###### MPMediaPickerController - iOS
 ![alt text](https://raw.githubusercontent.com/kjellconnelly/react-native-musicplayercontroller/master/example/picker_ios.gif "MPMediaPickerController - iOS")
+
+###### Intent.ACTION_PICK - Android
+![alt text](https://raw.githubusercontent.com/kjellconnelly/react-native-musicplayercontroller/master/example/picker_android.gif "Intent.ACTION_PICK - Android")
 
 ###### input type='file' - web
 ![alt text](https://raw.githubusercontent.com/kjellconnelly/react-native-musicplayercontroller/master/example/picker_web.gif "<input type='file' /> - web")
@@ -100,13 +99,34 @@ MusicPlayerController.isPlaying(()=>{
 })
 ```
 
+H) And for Android, you need to ask for permission. This method checks for permission, and gives you 3 different callbacks for different situations. The first two aruments are for a popup that explains to the user why permission is required... The first argument is Title. Second is message:
+```javascript
+MusicPlayerController.requestPermission("Permission Required",
+"We need permission to play audio files from your storage. If you decline, you can always toggle this in Settings.",
+()=> { // User just tapped to Accept
+    this.presentPicker() // method defined somewhere else that does MusicPlayerController.presentPicker(...)
+}, ()=> { // User has already accepted
+    this.presentPicker()
+}, ()=> {
+    alert("Without permission to play audio files, we can only play the default music. If you want to change this, you can change this in your device Settings.")
+})
+```
+
+
+**WE RECOMMEND FOR CROSS PLATFORM APPS**
+Always do part H if your app uses Android. You can have all the same logic for iOS and Web since we'll simply always call the 'User has already accepted' callback. If you need to handle UI or have some other logic for Android Permissions, check out React Native's APIs: Permissions Android. The specific permission we use here is: ```READ_EXTERNAL_STORAGE``` (java), which is aka ```PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE``` (for React-Native)
+
+If your app doesn't use Android, you won't need this.
+
+
 
 ## TODO:
 1. ~~Setup Test Repo and integrate with current project~~
 2. ~~Write iOS Version~~ Initial Complete
 3. ~~Write Web Version~~ Initial Complete
-4. Hope someone writes the Android version
-5. Possibly write the Android version
+4. ~~Hope someone writes the Android version~~ No one did
+5. ~~Possibly write the Android version~~ Initial Complete
+6. Fix bugs & increase functionality for all platforms as needed
 
 
 ## License
@@ -129,6 +149,9 @@ module.exports = {
 #### iOS
 Should work for iOS 8.0+ (devices from late 2014 or later). Only physically tested on iOS 10.2
 
+#### Android
+Works for all React-Native Projects (Marshmallow and above).
+
 #### Web
 Should work for all modern browsers, though users can only select mp3, ogg, and wav files. Who uses ogg and wav anyways? 
 1. Chrome 4.0 (2010) 
@@ -143,13 +166,20 @@ Also works on Mobile Browsers
 3. Android Chrome (2017)
 
 ## Known Issues
-The web version has a few issues:
+*Web Issues*
 1. Due to web restrictions, we can't save a link to the audio file selected beyond browser refreshes. So in order to compensate, you can choose to either save the entire audio file to local storage (which has a 5-10 mb maximum), or not save it. Saving on other platforms just saves the link.
-**Note that as of the current version, this bool is irrelevent, as both ```true``` and ```false``` will not save to Local Storage (this is because my project doesn't need it, but I might add this functionality some day if someone needs it, or I do.). Nevertheless, you still need to include it.**
+
+**Note that as of the current version, this bool is irrelevent, as both ```true``` and ```false``` will not save to Local Storage (this is because my project doesn't need it, but I might add this functionality some day if someone needs it, or I do). Nevertheless, you still need to include it.**
 2. If opens the Picker dialog, and clicks cancel without selecting an audio file, your cancelHandler won't be called. But if they select a file, and the successHandler is called, then open the Picker dialog again, and click cancel, the cancelHandler will be called. Weird web issues...
 3. Audio is played using the ```<audio />``` tag. This means that users can only use mp3, wav, and ogg files. We recommend mp3 since they work on all browsers, while the others vary.
 4. ```repeatMode``` was originally created for iOS. We're setting ```'none'``` has non repeating (plays once), and all other values as repeating forever. This is because you cannot select a playlist, but only an audio file.
 5. I'm not sure how to get actual metadata from a mp3 or wav, so for ```metadata```, it will only hold one key: ```title```, which is the audio file name.
+
+*Android Issues*
+1. Unlike iOS and Web, you need to user permission to access files (even the ones they pick). Similar to how on iOS, you need permission to access the Microphone. Though the API is the same for iOS, Android, and Web, there is one method that really only needs to be called if you are using Android: requestPermission. If you call this on other platforms, it just runs the 'permission already accepted' handler.
+2. I'm not exactly sure why the picker slides the current Activity away first as in the example gif. But that's only if you have a new Activity (ViewController basically) ontop of your main one.
+3. Technically speaking, when you call the stopMusic function, music is actually paused, and after a slight delay, moves to time 0. This is a 100ms delay. I added this here because using the Java API, pausing and seeking to time 0 would seek before fully pausing. And the stop method made me need to prepare the MediaPlayer again. So it will be in the paused state if you go into the Java side of things.
+4. Since Android lets you pick files you may have randomly put on your device, you may end up with audio files that do not have very good metadata. In this case, if there is no title attributed to the metadata, we will return the filename instead (similar to the web version). 
 
 ## Common Debugging Issues
 
@@ -177,8 +207,10 @@ I was lazy and didn't include all types of metadata... just the ones I personall
  @"albumTitle" : item.albumTitle,
  @"playbackDuration" : @(item.playbackDuration)
  ```
-Oh, and web only has ```title```, which actually shows the filename.
+Oh, and web only has ```title```, which actually shows the filename. Android returns filename too if there is no title in the actual metadata.
 
 ##### I can't do...
 
 I know, I know. There's a lot that may be difficult to do with this module as of now. But it allows for the situation where you want a user to be able to select some music from their own library, and play is back within your own app. And that's my focus for now. Please ask any questions or ask for a feature and I'll see what I can do.
+
+Star this project if you like it! It's good feedback that someone likes what I've built. And thanks for reading this!

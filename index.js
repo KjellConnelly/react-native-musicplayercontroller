@@ -1,6 +1,34 @@
-import {NativeModules} from 'react-native'
+import {NativeModules, Platform, PermissionsAndroid} from 'react-native'
 
 class MusicPlayerController {
+    static async requestPermission(title, message, grantedHandler, previouslyGrantedHandler, declinedHandler) {
+        const key = PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
+        if (Platform.OS == 'android') {
+            try { 
+                const preGranted = await PermissionsAndroid.check(key)
+                if (preGranted) {
+                    previouslyGrantedHandler()
+                } else {
+                    try {
+                        const granted = await PermissionsAndroid.request( key, {'title': title, 'message': message})
+                        
+                        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                            grantedHandler()
+                        } else {
+                            declinedHandler()
+                        }
+                    } catch (err) {
+                        console.warn(err)
+                    }
+                }
+            } catch (error) {
+                
+            }
+        } else {
+            previouslyGrantedHandler()
+        }
+    }
+    
     static presentPicker(webSaveToLocalStorage, successHandler, cancelHandler) {
         const player = NativeModules.RNReactNativeMusicplayercontroller
         player.presentPicker((errorCode, metadata) => {
