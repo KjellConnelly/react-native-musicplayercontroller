@@ -1,7 +1,8 @@
 class MusicPlayerController {
-    static requestPermission(grantedHandler, previouslyGrantedHandler, declinedHandler) {
+    static requestPermission(title, message, grantedHandler, previouslyGrantedHandler, declinedHandler) {
         previouslyGrantedHandler()
     }
+    
     
     static presentPicker(webSaveToLocalStorage, successHandler, cancelHandler) {
         let input = document.getElementById("MusicPlayerControllerInput")
