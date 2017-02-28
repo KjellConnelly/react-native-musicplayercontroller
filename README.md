@@ -99,7 +99,7 @@ MusicPlayerController.isPlaying(()=>{
 })
 ```
 
-H) And for Android, you need to ask for permission. This method checks for permission, and gives you 3 different callbacks for different situations. The first two aruments are for a popup that explains to the user why permission is required... The first argument is Title. Second is message:
+G) And for Android, you need to ask for permission. This method checks for permission, and gives you 3 different callbacks for different situations. The first two aruments are for a popup that explains to the user why permission is required... The first argument is Title. Second is message:
 ```javascript
 MusicPlayerController.requestPermission("Permission Required",
 "We need permission to play audio files from your storage. If you decline, you can always toggle this in Settings.",
