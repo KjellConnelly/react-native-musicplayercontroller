@@ -15,6 +15,8 @@ react-native link
 
 If your Xcode project has more than one Target, you will need to navigate to ```Libraries > RNReactNativeMusicplayercontroller.xcodeproj > Products > libRNReactNativeMusicplayercontroller.a``` and drag this into each Target's ```Build Phases > Link Binary with Libraries```. There should already be a few .a files in there, so it's pretty obvious. react-native link only links to the first Target.
 
+For iOS apps, make sure you add NSAppleMusicUsageDescription to your info.plist. Check out the Common Debugging Issues near the bottom for a description of how this works.
+
 ## Usage
 ```javascript
 import MusicPlayerController from 'react-native-musicplayercontroller'
@@ -126,7 +128,8 @@ If your app doesn't use Android, you won't need this.
 3. ~~Write Web Version~~ Initial Complete
 4. ~~Hope someone writes the Android version~~ No one did
 5. ~~Possibly write the Android version~~ Initial Complete
-6. Fix bugs & increase functionality for all platforms as needed
+6. ~~Fix bugs & increase functionality for all platforms as needed~~ version 1.0 released
+7. Will update as needed, but works perfectly for the cross platform app I am currently working on.
 
 
 ## License
@@ -198,6 +201,17 @@ And of course, rebuild the actual app (Xcode > Build & Run, or ```react-native r
 ##### If you're testing on simulator
 
 Unfortunately MPMediaPickerController doesn't work on the iOS Simulator. So you just get an alert if you try to open the Picker. And since you can't pick an item, playing them won't work either because you won't have anything selected.
+
+##### The picker pops up on iOS, and instantly pops off
+
+As of iOS 10.something, there is a new privacy setting that you need to fill in. The first time you call the presentPicker method, the picker's ViewController will popup, and an alert will appear with your handwritten description of why you need access to their music library. If you don't have a NSAppleMusicUsageDescription if your info.plist file, the picker will slide off the page as soon as it slides in.
+
+Open your Xcode project, and open your info.plist file. By default, it opens as a Property List. If you right-click the file, you can click Open As > Source Code. Then paste in the following (editing the string tag of course). If you are unfamiliar with the source code format, it should make sense as there is an obvious pattern of <key></key> followed by its <value></value>. You're just adding one of these where the value is of type string.
+
+```
+<key>NSAppleMusicUsageDescription</key>
+<string>Fill in a description here that you want your users to see to explain why you need access to their Music Library</string>
+```
 
 ##### Types of metadata?
 
