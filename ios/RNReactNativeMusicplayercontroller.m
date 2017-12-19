@@ -54,6 +54,42 @@ RCT_EXPORT_METHOD(presentPicker: (RCTResponseSenderBlock)callback) {
 //////////////////////////////////////////////////////////////////////
 // MPMusicPlayerController
 
+RCT_EXPORT_METHOD(setSessionCategory: (NSString *)categoryString: (NSString *)optionString) {
+    NSArray *categories = @[@"AVAudioSessionCategoryAmbient",
+                            @"AVAudioSessionCategorySoloAmbient",
+                            @"AVAudioSessionCategoryPlayback",
+                            @"AVAudioSessionCategoryRecord",
+                            @"AVAudioSessionCategoryPlayAndRecord",
+                            @"AVAudioSessionCategoryMultiRoute"];
+    
+    NSArray *options = @[   @"AVAudioSessionCategoryOptionMixWithOthers",
+                            @"AVAudioSessionCategoryOptionDuckOthers",
+                            @"AVAudioSessionCategoryOptionInterruptSpokenAudioAndMixWithOthers",
+                            @"AVAudioSessionCategoryOptionAllowBluetooth",
+                            @"AVAudioSessionCategoryOptionAllowBluetoothA2DP",
+                            @"AVAudioSessionCategoryOptionAllowAirPlay",
+                            @"AVAudioSessionCategoryOptionDefaultToSpeaker"];
+    
+    NSString *theCategory = categories[1];
+    for (int i = 0; i < categories.count; i++) {
+        if ([[categoryString capitalizedString] isEqualToString:[categories[i] capitalizedString]]) {
+            theCategory = categories[i];
+        }
+    }
+    
+    if (optionString.length > 0) {
+        int optionNumber = 0;
+        for (int i = 0; i < options.count; i++) {
+            if ([[optionString capitalizedString] isEqualToString:[options[i] capitalizedString]]) {
+                optionNumber = i;
+            }
+        }
+        [[AVAudioSession sharedInstance] setCategory:theCategory withOptions:optionNumber error:nil];
+    }
+    
+    [[AVAudioSession sharedInstance] setCategory:theCategory error:nil];
+}
+
 RCT_EXPORT_METHOD(preloadMusic: (NSString *)repeatMode:(RCTResponseSenderBlock)callback) {
     if ([[NSUserDefaults standardUserDefaults] valueForKey:@"mediaItemCollection"] != nil) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -64,7 +100,7 @@ RCT_EXPORT_METHOD(preloadMusic: (NSString *)repeatMode:(RCTResponseSenderBlock)c
             if (musicPlayer == nil) {
                 callback(@[[NSNumber numberWithInteger:1], @[]]);
             } else {
-                
+                NSLog(@"%@\n%lu", AVAudioSessionCategoryPlayback, AVAudioSessionCategoryOptionDuckOthers);
                 if ([repeatMode isEqualToString:@"none"]) {
                     [musicPlayer setRepeatMode:MPMusicRepeatModeNone];
                 } else if ([repeatMode isEqualToString:@"one"]) {
@@ -173,3 +209,4 @@ RCT_EXPORT_METHOD(isPlaying: (RCTResponseSenderBlock)callback) {
 }
 
 @end
+

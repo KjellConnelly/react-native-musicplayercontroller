@@ -1,17 +1,20 @@
 import {NativeModules, Platform, PermissionsAndroid} from 'react-native'
 
+// to transpile to es5 for web: https://babeljs.io/repl/
+// check off es2015, react
+
 class MusicPlayerController {
     static async requestPermission(title, message, grantedHandler, previouslyGrantedHandler, declinedHandler) {
         const key = PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
         if (Platform.OS == 'android') {
-            try { 
+            try {
                 const preGranted = await PermissionsAndroid.check(key)
                 if (preGranted) {
                     previouslyGrantedHandler()
                 } else {
                     try {
                         const granted = await PermissionsAndroid.request( key, {'title': title, 'message': message})
-                        
+
                         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
                             grantedHandler()
                         } else {
@@ -22,13 +25,13 @@ class MusicPlayerController {
                     }
                 }
             } catch (error) {
-                
+
             }
         } else {
             previouslyGrantedHandler()
         }
     }
-    
+
     static presentPicker(webSaveToLocalStorage, successHandler, cancelHandler) {
         const player = NativeModules.RNReactNativeMusicplayercontroller
         player.presentPicker((errorCode, metadata) => {
@@ -36,15 +39,15 @@ class MusicPlayerController {
                 // No Error. User picked
                 successHandler(metadata)
             } else if (errorCode == 1) {
-                // Able to open Picker, but user tapped Cancel 
+                // Able to open Picker, but user tapped Cancel
                 cancelHandler()
             } else if (errorCode == 2) {
-                // Cannot open picker - Using Simulator 
+                // Cannot open picker - Using Simulator
                 alert("Sorry - iOS doesn't allow MPMusicPlayerController to be opened on the simulator. Please try on an actual device with at least one song in the library (song download from iTunes and in your Music App)")
             }
         })
     }
-    
+
     static preloadMusic(repeatMode, successHandler, errorHandler) {
         const player = NativeModules.RNReactNativeMusicplayercontroller
         player.preloadMusic(repeatMode, (errorCode, metadata) => {
@@ -57,7 +60,7 @@ class MusicPlayerController {
             }
         })
     }
-    
+
     static playMusic(successHandler, errorHandler) {
         const player = NativeModules.RNReactNativeMusicplayercontroller
         player.playMusic((errorCode, metadata) => {
@@ -70,7 +73,7 @@ class MusicPlayerController {
             }
         })
     }
-    
+
     static stopMusic(successHandler, errorHandler) {
         const player = NativeModules.RNReactNativeMusicplayercontroller
         player.stopMusic((errorCode, metadata) => {
@@ -83,7 +86,7 @@ class MusicPlayerController {
             }
         })
     }
-    
+
     static pauseMusic(successHandler, errorHandler) {
         const player = NativeModules.RNReactNativeMusicplayercontroller
         player.pauseMusic((errorCode, metadata) => {
@@ -96,7 +99,7 @@ class MusicPlayerController {
             }
         })
     }
-    
+
     static isPlaying(isPlayingHandler, notPlayingHandler) {
         const player = NativeModules.RNReactNativeMusicplayercontroller
         player.isPlaying((errorCode, result) => {
@@ -108,6 +111,13 @@ class MusicPlayerController {
                 notPlayingHandler()
             }
         })
+    }
+
+    static setSessionCategory(category, option) {
+      if (Platform.OS == 'ios') {
+        const player = NativeModules.RNReactNativeMusicplayercontroller
+        player.setSessionCategory(category, option)
+      }
     }
 }
 

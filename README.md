@@ -90,6 +90,7 @@ MusicPlayerController.stopMusic(()=>{
 }, ()=> {
   // failed to stop music
 })
+// Note that if you call stopMusic(), you will probably need to preloadMusic again if you want playMusic() to work.
 ```
 
 F) Or check if music is playing 
@@ -114,6 +115,50 @@ MusicPlayerController.requestPermission("Permission Required",
 })
 ```
 
+H) Or for iOS, you can set the Session Category. By default, your music will play, but duck out when other audio comes in. So if you're building a game, and you have audio files playing sound effects, your background music will get quiet while those effects happen, and go back to normal sound when they are done. This is useful for some apps, but a problem for others. You may have your own specific circumstances to change these. Here's two examples:
+```javascript
+MusicPlayerController.preloadMusic("all", (metadata)=>{
+    // Successful preload, useful settings for a game with sound effects
+    MusicPlayerController.setSessionCategory("AVAudioSessionCategoryPlayback", "AVAudioSessionCategoryOptionDuckOthers")
+    
+}, ()=>{
+    // failed to preload
+})
+```
+
+```javascript
+MusicPlayerController.preloadMusic("all", (metadata)=>{
+    // Successful preload, default settings if you didn't set session in the first place
+    MusicPlayerController.setSessionCategory("AVAudioSessionCategorySoloAmbient")
+    }, ()=>{
+    // failed to preload
+})
+```
+
+You must input the first parameter (category), but the second is optional. Below are the options we currently support:
+```objc
+NSArray *categories = @[
+    @"AVAudioSessionCategoryAmbient",
+    @"AVAudioSessionCategorySoloAmbient",
+    @"AVAudioSessionCategoryPlayback",
+    @"AVAudioSessionCategoryRecord",
+    @"AVAudioSessionCategoryPlayAndRecord",
+    @"AVAudioSessionCategoryMultiRoute"];
+
+NSArray *options = @[
+    @"AVAudioSessionCategoryOptionMixWithOthers",
+    @"AVAudioSessionCategoryOptionDuckOthers",
+    @"AVAudioSessionCategoryOptionInterruptSpokenAudioAndMixWithOthers",
+    @"AVAudioSessionCategoryOptionAllowBluetooth",
+    @"AVAudioSessionCategoryOptionAllowBluetoothA2DP",
+    @"AVAudioSessionCategoryOptionAllowAirPlay",
+    @"AVAudioSessionCategoryOptionDefaultToSpeaker"];
+```
+For more info on these categories, here are links to Apple's documentation:
+https://developer.apple.com/documentation/avfoundation/avaudiosession/audio_session_categories?language=objc
+https://developer.apple.com/documentation/avfoundation/avaudiosessioncategoryoptions?language=objc
+
+P.S. If you call this function on Android or Web, nothing will happen currently. There may be Android or web alternatives at some point, but for now you can safely call this function without worrying about crashing or anything else bad happening on other platforms.
 
 **WE RECOMMEND FOR CROSS PLATFORM APPS**
 Always do part G if your app uses Android. You can have all the same logic for iOS and Web since we'll simply always call the 'User has already accepted' callback. If you need to handle UI or have some other logic for Android Permissions, check out React Native's APIs: Permissions Android. The specific permission we use here is: ```READ_EXTERNAL_STORAGE``` (java), which is aka ```PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE``` (for React-Native)

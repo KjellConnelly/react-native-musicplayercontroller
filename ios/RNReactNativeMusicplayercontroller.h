@@ -8,7 +8,9 @@
 #import <React/RCTBridgeModule.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
 
 @interface RNReactNativeMusicplayercontroller : NSObject <RCTBridgeModule, MPMediaPickerControllerDelegate>
 
 @end
+
