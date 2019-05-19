@@ -61,7 +61,9 @@ public class RNReactNativeMusicplayercontroller extends ReactContextBaseJavaModu
                             savedHandler.invoke(0, metadata);
                         }
                     } else {
+                      if (savedHandler != null) {
                         savedHandler.invoke(1, "User Tapped Cancel");
+                      }
                     }
                 }
             }, 1);
@@ -117,7 +119,7 @@ public class RNReactNativeMusicplayercontroller extends ReactContextBaseJavaModu
 
         return arr;
     }
-    
+
     @ReactMethod
     public void presentPicker(Callback handler) {
         savedHandler = handler;
