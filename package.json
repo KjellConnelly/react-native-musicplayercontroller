@@ -1,14 +1,15 @@
 {
   "name": "react-native-musicplayercontroller",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Class to modally display MPMediaPickerViewController and play music from a user's device using MPMusicPlayerController (iOS), and its Android/Web equivilents",
   "main": "index",
   "scripts": {
-    "test": "echo test"
+    "test": "echo test",
+    "deploy": "npm --no-git-tag-version version patch && git add . && git commit -am \"Next Version\" && git push && npm publish"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/KjellConnelly/react-native-musicplayercontroller.git"
+    "url": "https://github.com/KjellConnelly/react-native-musicplayercontroller.git"
   },
   "keywords": [
     "react-native",
