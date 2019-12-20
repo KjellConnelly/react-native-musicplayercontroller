@@ -8,7 +8,7 @@
 #import "RNReactNativeMusicplayercontroller.h"
 
 @implementation RNReactNativeMusicplayercontroller
-RCTResponseSenderBlock savedCallback;
+RCTResponseSenderBlock savedCallbackForMusicPlayerController;
 MPMusicPlayerController *musicPlayer;
 
 
@@ -18,10 +18,10 @@ RCT_EXPORT_MODULE();
 // Media Picker
 
 RCT_EXPORT_METHOD(presentPicker: (RCTResponseSenderBlock)callback) {
-    savedCallback = callback;
-    
+    savedCallbackForMusicPlayerController = callback;
+
 #if TARGET_IPHONE_SIMULATOR
-    savedCallback(@[[NSNumber numberWithInt:2], @[]]);
+    savedCallbackForMusicPlayerController(@[[NSNumber numberWithInt:2], @[]]);
 #else
     dispatch_async(dispatch_get_main_queue(), ^{
         UIViewController *topViewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
@@ -38,7 +38,7 @@ RCT_EXPORT_METHOD(presentPicker: (RCTResponseSenderBlock)callback) {
                 break;
             }
         }
-        
+
         MPMediaPickerController *picker = [[MPMediaPickerController alloc] initWithMediaTypes:MPMediaTypeMusic];
         [picker setShowsCloudItems:false];
         [picker setAllowsPickingMultipleItems:false];
@@ -61,7 +61,7 @@ RCT_EXPORT_METHOD(setSessionCategory: (NSString *)categoryString: (NSString *)op
                             @"AVAudioSessionCategoryRecord",
                             @"AVAudioSessionCategoryPlayAndRecord",
                             @"AVAudioSessionCategoryMultiRoute"];
-    
+
     NSArray *options = @[   @"AVAudioSessionCategoryOptionMixWithOthers",
                             @"AVAudioSessionCategoryOptionDuckOthers",
                             @"AVAudioSessionCategoryOptionInterruptSpokenAudioAndMixWithOthers",
@@ -69,14 +69,14 @@ RCT_EXPORT_METHOD(setSessionCategory: (NSString *)categoryString: (NSString *)op
                             @"AVAudioSessionCategoryOptionAllowBluetoothA2DP",
                             @"AVAudioSessionCategoryOptionAllowAirPlay",
                             @"AVAudioSessionCategoryOptionDefaultToSpeaker"];
-    
+
     NSString *theCategory = categories[1];
     for (int i = 0; i < categories.count; i++) {
         if ([[categoryString capitalizedString] isEqualToString:[categories[i] capitalizedString]]) {
             theCategory = categories[i];
         }
     }
-    
+
     if (optionString.length > 0) {
         int optionNumber = 0;
         for (int i = 0; i < options.count; i++) {
@@ -86,7 +86,7 @@ RCT_EXPORT_METHOD(setSessionCategory: (NSString *)categoryString: (NSString *)op
         }
         [[AVAudioSession sharedInstance] setCategory:theCategory withOptions:optionNumber error:nil];
     }
-    
+
     [[AVAudioSession sharedInstance] setCategory:theCategory error:nil];
 }
 
@@ -110,7 +110,7 @@ RCT_EXPORT_METHOD(preloadMusic: (NSString *)repeatMode:(RCTResponseSenderBlock)c
                 } else {
                     [musicPlayer setRepeatMode:MPMusicRepeatModeDefault];
                 }
-                
+
                 [musicPlayer setQueueWithItemCollection:mediaItemCollection];
                 [musicPlayer prepareToPlayWithCompletionHandler:^(NSError * _Nullable error) {
                     if (error) {
@@ -173,7 +173,7 @@ RCT_EXPORT_METHOD(isPlaying: (RCTResponseSenderBlock)callback) {
 
 - (void)mediaPickerDidCancel:(MPMediaPickerController *)mediaPicker {
     [mediaPicker dismissViewControllerAnimated:true completion:^{
-        savedCallback(@[[NSNumber numberWithInt:1], @[]]);
+        savedCallbackForMusicPlayerController(@[[NSNumber numberWithInt:1], @[]]);
     }];
 }
 
@@ -181,13 +181,13 @@ RCT_EXPORT_METHOD(isPlaying: (RCTResponseSenderBlock)callback) {
     // saving collection as NSData, then to NSUserDefaults
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:mediaItemCollection];
     [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"mediaItemCollection"];
-    
+
     // Creating metadata
     NSArray *metadata = [self createMetadataFor:mediaItemCollection];
-    
+
     // Callback
     [mediaPicker dismissViewControllerAnimated:true completion:^{
-        savedCallback(@[[NSNumber numberWithInt:0], metadata]);
+        savedCallbackForMusicPlayerController(@[[NSNumber numberWithInt:0], metadata]);
     }];
 }
 
@@ -209,4 +209,3 @@ RCT_EXPORT_METHOD(isPlaying: (RCTResponseSenderBlock)callback) {
 }
 
 @end
-
