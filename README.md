@@ -4,14 +4,18 @@ This module is being created so React-Native (and React-Native for Web) users ca
 
 
 ## Current State
-Initial versions for iOS, Android, and Web have been completed. After a few days of fully integrating and testing on my own current app, I'll bump this to version 1.0.0. Note that the API for all is the same, though the functionality may differ slightly. Check out more of this readme for more details on differences. 
+Initial versions for iOS, Android, and Web have been completed. After a few days of fully integrating and testing on my own current app, I'll bump this to version 1.0.0. Note that the API for all is the same, though the functionality may differ slightly. Check out more of this readme for more details on differences.
 
 ## Installation
 
-```
-npm install --save react-native-musicplayercontroller
-react-native link
-```
+`npm i react-native-musicplayercontroller`
+
+### Mostly automatic installation (new way with react-native v0.60+)
+`cd ios && pod install && cd ../`
+
+### Mostly automatic installation (old way v<0.60)
+
+`$ react-native link react-native-musicplayercontroller`
 
 If your Xcode project has more than one Target, you will need to navigate to ```Libraries > RNReactNativeMusicplayercontroller.xcodeproj > Products > libRNReactNativeMusicplayercontroller.a``` and drag this into each Target's ```Build Phases > Link Binary with Libraries```. There should already be a few .a files in there, so it's pretty obvious. react-native link only links to the first Target.
 
@@ -47,7 +51,7 @@ MusicPlayerController.presentPicker(false, (metadata)=>{
 ###### input type='file' - web
 ![alt text](https://raw.githubusercontent.com/kjellconnelly/react-native-musicplayercontroller/master/example/picker_web.gif "<input type='file' /> - web")
 
-*note* that the first argument is false. This has to do with the web version only (unused variable on iOS and Android, but we still put it there so we don't have different code calls). It has to do with whether you want to save the sound file locally. Due to web restrictions, we can't save a link to the file the user selected between page refreshes. So we need to make a local copy of the music file and save it to local storage. Since local storage is fairly small on most browsers (usually 5MB), we wouldn't want to save it if we plan to use local storage for anything else, or have users pick files that are larger than 5MB. So this is optional. On iOS and Android, we actually can save a link. So the memory usage is pretty much no existant. 
+*note* that the first argument is false. This has to do with the web version only (unused variable on iOS and Android, but we still put it there so we don't have different code calls). It has to do with whether you want to save the sound file locally. Due to web restrictions, we can't save a link to the file the user selected between page refreshes. So we need to make a local copy of the music file and save it to local storage. Since local storage is fairly small on most browsers (usually 5MB), we wouldn't want to save it if we plan to use local storage for anything else, or have users pick files that are larger than 5MB. So this is optional. On iOS and Android, we actually can save a link. So the memory usage is pretty much no existant.
 
 B) Once the user has an actual track/playlist chosen, you can access this always, even when the user closes and reopens your app. But you need to preload the music so the player is cached. If you just call the playMusic method, and music hasn't been preloaded, it will fail.
 ```javascript
@@ -93,7 +97,7 @@ MusicPlayerController.stopMusic(()=>{
 // Note that if you call stopMusic(), you will probably need to preloadMusic again if you want playMusic() to work.
 ```
 
-F) Or check if music is playing 
+F) Or check if music is playing
 ```javascript
 MusicPlayerController.isPlaying(()=>{
   // music is playing
@@ -120,7 +124,7 @@ H) Or for iOS, you can set the Session Category. By default, your music will pla
 MusicPlayerController.preloadMusic("all", (metadata)=>{
     // Successful preload, useful settings for a game with sound effects
     MusicPlayerController.setSessionCategory("AVAudioSessionCategoryPlayback", "AVAudioSessionCategoryOptionDuckOthers")
-    
+
 }, ()=>{
     // failed to preload
 })
@@ -208,12 +212,12 @@ Should work for all modern browsers, though users can only select mp3, ogg, and 
   4. Safari (2009, mp3 and wav only)  
   5. Opera (2007)  
   6. Edge (2016)  
-  
+
 Also works on Mobile Browsers  
   1. iOS Safari & Chrome (2016)  
   2. Android Browser (2013)  
   3. Android Chrome (2017)  
-  
+
 ## Known Issues
 *Web Issues*  
   1. Due to web restrictions, we can't save a link to the audio file selected beyond browser refreshes. So in order to compensate, you can choose to either save the entire audio file to local storage (which has a 5-10 mb maximum), or not save it. Saving on other platforms just saves the link.  
